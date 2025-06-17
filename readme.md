@@ -1,3 +1,3 @@
 # My wezterm config
 
-Windows: Place config file unter `C:\Users\USER\.config\wezterm`.
+Windows: Place config file under `C:\Users\USER\.config\wezterm`.
