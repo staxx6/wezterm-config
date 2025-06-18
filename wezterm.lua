@@ -18,6 +18,32 @@ config.window_frame = {
   inactive_titlebar_bg = '#313030'
 }
 
+-- Set tab title to last folder
+wezterm.on("format-tab-title", function(tab, tabs, panes, config2, hover, max_width)
+  -- Don't override own title
+  local manual_title = tab.tab_title
+  if manual_title and manual_title ~= "" then
+    return manual_title
+  end
+
+  local title = tostring(tab.active_pane.current_working_dir)
+
+  if title then
+    -- Entferne das "file:///" Prefix
+    local path = title:gsub("^file:///", "")
+
+    -- Windows: Pfad-Trenner ersetzen
+    path = path:gsub("/", "\\")
+
+    -- Extrahiere letzten Ordner
+    local last_folder = path:match("([^\\]+)\\?$") or path
+
+    return last_folder
+  end
+
+  return "Shell"
+end)
+
 -- Windows stuff
 config.window_decorations = 'INTEGRATED_BUTTONS|RESIZE'
 
@@ -75,12 +101,12 @@ config.keys = {
   {
     key = 'd',
     mods = 'ALT',
-    action = act.CloseCurrentPane { confirm = true }
+    action = act.CloseCurrentPane { confirm = false }
   },
 
   -- Change current tab title
   {
-    key = 't',
+    key = 'r',
     mods = 'ALT',
     action = act.PromptInputLine {
       description = 'Enter new name for tab',
@@ -93,6 +119,11 @@ config.keys = {
         end
       end),
     },
+  },
+  {
+    key = 't',
+    mods = 'ALT',
+    action = act.SpawnTab 'CurrentPaneDomain',
   },
 }
 
