@@ -54,50 +54,73 @@ config.keys = {
   -- This will create a new split and run your default program inside it
   {
     key = 'h',
-    mods = 'ALT',
+    mods = 'CTRL|ALT',
     action = act.SplitPane { direction = 'Left' },
   },
   {
     key = 'j',
-    mods = 'ALT',
+    mods = 'CTRL|ALT',
     action = act.SplitPane { direction = 'Down' },
   },
   {
     key = 'k',
-    mods = 'ALT',
+    mods = 'CTRL|ALT',
     action = act.SplitPane { direction = 'Up' },
   },
   {
     key = 'l',
-    mods = 'ALT',
+    mods = 'CTRL|ALT',
     action = act.SplitPane { direction = 'Right' },
   },
+
   -- change pane size
   {
-    key = 'h',
+    key = 'H',
     mods = 'ALT|SHIFT',
     action = act.AdjustPaneSize { 'Left', 5 },
   },
   {
-    key = 'j',
+    key = 'J',
     mods = 'ALT|SHIFT',
     action = act.AdjustPaneSize { 'Down', 5 },
   },
   {
-    key = 'k',
+    key = 'K',
     mods = 'ALT|SHIFT',
     action = act.AdjustPaneSize { 'Up', 5 } },
   {
-    key = 'l',
+    key = 'L',
     mods = 'ALT|SHIFT',
     action = act.AdjustPaneSize { 'Right', 5 },
   },
 
+  -- Pane selection
   {
     key = 'f',
     mods = 'ALT',
     action = act.PaneSelect
   },
+  {
+    key = 'h',
+    mods = 'ALT',
+    action = act.ActivatePaneDirection 'Left',
+  },
+  {
+    key = 'l',
+    mods = 'ALT',
+    action = act.ActivatePaneDirection 'Right',
+  },
+  {
+    key = 'k',
+    mods = 'ALT',
+    action = act.ActivatePaneDirection 'Up',
+  },
+  {
+    key = 'j',
+    mods = 'ALT',
+    action = act.ActivatePaneDirection 'Down',
+  },
+
   {
     key = 'd',
     mods = 'ALT',
