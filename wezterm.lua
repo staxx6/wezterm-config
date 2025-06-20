@@ -27,6 +27,7 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config2, hover, max_wi
   end
 
   local title = tostring(tab.active_pane.current_working_dir)
+  local currProg = tostring(tab.active_pane.foreground_process_name)
 
   if title then
     -- Entferne das "file:///" Prefix
@@ -37,6 +38,11 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config2, hover, max_wi
 
     -- Extrahiere letzten Ordner
     local last_folder = path:match("([^\\]+)\\?$") or path
+
+    wezterm.log_info(currProg)
+    if currProg and currProg:find("nvim.exe", 1, true) then
+      last_folder = "nvim " .. last_folder
+    end
 
     return last_folder
   end
