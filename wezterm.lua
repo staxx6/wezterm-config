@@ -1,5 +1,6 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
+local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.wezterm")
 
 config.initial_cols = 120
 config.initial_rows = 28
@@ -50,6 +51,11 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config2, hover, max_wi
   return "Shell"
 end)
 
+-- Show current workspace
+wezterm.on('update-right-status', function(window, pane)
+  window:set_right_status(window:active_workspace())
+end)
+
 -- Windows stuff
 config.window_decorations = 'INTEGRATED_BUTTONS|RESIZE'
 
@@ -93,7 +99,8 @@ config.keys = {
   {
     key = 'K',
     mods = 'ALT|SHIFT',
-    action = act.AdjustPaneSize { 'Up', 5 } },
+    action = act.AdjustPaneSize { 'Up', 5 }
+  },
   {
     key = 'L',
     mods = 'ALT|SHIFT',
@@ -149,10 +156,94 @@ config.keys = {
       end),
     },
   },
+
+  -- New tab
   {
     key = 't',
     mods = 'ALT',
     action = act.SpawnTab 'CurrentPaneDomain',
+  },
+
+  -- Workspace handling
+  {
+    key = 'w',
+    mods = 'ALT',
+    action = act.ShowLauncherArgs {
+      flags = 'WORKSPACES',
+      title = '> Workspaces',
+    },
+  },
+  {
+    key = 'w',
+    mods = 'CTRL|ALT',
+    action = act.PromptInputLine {
+      description = wezterm.format {
+        { Attribute = { Intensity = 'Bold' } },
+        { Foreground = { AnsiColor = 'Fuchsia' } },
+        { Text = 'Enter name for new workspace' },
+      },
+      action = wezterm.action_callback(function(window, pane, line)
+        -- line will be `nil` if they hit escape without entering anything
+        -- An empty string if they just hit enter
+        -- Or the actual line of text they wrote
+        if line then
+          window:perform_action(
+            act.SwitchToWorkspace {
+              name = line,
+            },
+            pane
+          )
+        end
+      end),
+    }
+  },
+
+  --
+  -- Plugins
+  --
+
+  -- Resurrect
+
+  {
+    key = "s",
+    mods = "CTRL|ALT",
+    action = wezterm.action_callback(function(window, pane)
+      local tab = window:active_tab()
+      local title = tab:get_title() or "unnamed"
+      if tab == nil then
+        print('tab has NO value')
+      end
+      if title == nil then
+        print('title has NO value')
+      end
+      if resurrect.tab_state == nil then
+        print('tab state has NO value')
+      end
+
+      print("title" .. title)
+      resurrect.tab_state.save_tab_action(tab, title .. ".tab.json")
+      wezterm.log_info("Saved tab as: " .. title)
+    end),
+  },
+
+  {
+    key = "g",
+    mods = "ALT",
+    action = wezterm.action_callback(function(win, pane)
+        print(win)
+        print(pane)
+      resurrect.fuzzy_loader.fuzzy_load(win, pane, function(id, label)
+        print(win)
+        print(pane)
+        local state = resurrect.state_manager.load_state(id, "tab")
+        if state then
+          resurrect.tab_state.restore_tab(pane:tab(), state, {
+            restore_text = true,
+            on_pane_restore = resurrect.tab_state.default_on_pane_restore,
+          })
+        end
+      end)
+    end),
   },
 }
 
