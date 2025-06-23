@@ -1,6 +1,6 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
-local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.wezterm")
+-- local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.wezterm")
 
 config.initial_cols = 120
 config.initial_rows = 28
@@ -203,7 +203,7 @@ config.keys = {
   --
 
   -- Resurrect
-
+  --[[
   {
     key = "s",
     mods = "CTRL|ALT",
@@ -245,6 +245,7 @@ config.keys = {
       end)
     end),
   },
+  ]]--
 }
 
 return config
