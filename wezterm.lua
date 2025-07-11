@@ -1,5 +1,12 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
+
+local isWindows = false
+if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
+  isWindows = true
+end
+  isWindows = false
+
 -- local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.wezterm")
 
 config.initial_cols = 120
@@ -9,8 +16,8 @@ config.window_background_opacity = 0.98
 config.font_size = 12
 config.color_scheme = 'GruvboxDark'
 
-config.default_prog = { 'pwsh' }
-config.default_cwd = 'C:\\'
+config.default_prog = isWindows and { 'pwsh' } or { 'bash' }
+config.default_cwd = isWindows and 'C:\\' or '/'
 
 -- Tab bar
 config.window_frame = {
@@ -35,16 +42,26 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config2, hover, max_wi
     local path = title:gsub("^file:///", "")
 
     -- Windows: Pfad-Trenner ersetzen
-    path = path:gsub("/", "\\")
+    path = isWindows and path:gsub("/", "\\") or path
 
     -- Extrahiere letzten Ordner
-    local last_folder = path:match("([^\\]+)\\?$") or path
-
-    wezterm.log_info(currProg)
-    if currProg and currProg:find("nvim.exe", 1, true) then
-      last_folder = "nvim " .. last_folder
+    local last_folder
+    if isWindows then
+      last_folder = path:match("([^\\]+)\\?$") or path
+    else
+      last_folder = path:match("([^/]+)/?$") or path
     end
 
+    if currProg then
+      local isNvim = isWindows and currProg:find("nvim.exe", 1, true) or currProg:find("nvim", 1, true)
+      if isNvim then
+        last_folder = "nvim " .. last_folder
+      end
+    end
+
+    if last_folder == '' then
+      return '/'
+    end
     return last_folder
   end
 
