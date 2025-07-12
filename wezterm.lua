@@ -5,7 +5,7 @@ local isWindows = false
 if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   isWindows = true
 end
-  isWindows = false
+isWindows = false
 
 -- local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.wezterm")
 
@@ -87,6 +87,11 @@ config.keys = {
     action = act.SplitPane { direction = 'Left' },
   },
   {
+    key = 'y',
+    mods = 'CTRL|ALT',
+    action = act.SplitPane { direction = 'Left', top_level = true },
+  },
+  {
     key = 'j',
     mods = 'CTRL|ALT',
     action = act.SplitPane { direction = 'Down' },
@@ -100,6 +105,11 @@ config.keys = {
     key = 'l',
     mods = 'CTRL|ALT',
     action = act.SplitPane { direction = 'Right' },
+  },
+  {
+    key = 'o',
+    mods = 'CTRL|ALT',
+    action = act.SplitPane { direction = 'Right', top_level = true },
   },
 
   -- change pane size
@@ -262,7 +272,7 @@ config.keys = {
       end)
     end),
   },
-  ]]--
+  ]] --
 }
 
 return config
