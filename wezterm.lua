@@ -26,6 +26,13 @@ config.window_frame = {
   inactive_titlebar_bg = '#313030'
 }
 
+config.window_padding = {
+  left = '1cell',
+  right = '1cell',
+  top = 0,
+  bottom = 0
+}
+
 -- Set tab title to last folder
 wezterm.on("format-tab-title", function(tab, tabs, panes, config2, hover, max_width)
   -- Don't override own title
