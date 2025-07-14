@@ -32,6 +32,8 @@ config.window_padding = {
   top = 0,
   bottom = 0
 }
+config.underline_position = '-3.2pt'
+config.underline_thickness = '1.5pt'
 
 -- Set tab title to last folder
 wezterm.on("format-tab-title", function(tab, tabs, panes, config2, hover, max_width)
