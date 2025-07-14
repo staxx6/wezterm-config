@@ -5,7 +5,6 @@ local isWindows = false
 if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   isWindows = true
 end
-isWindows = false
 
 -- local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.wezterm")
 
